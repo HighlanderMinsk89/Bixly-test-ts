@@ -4,4 +4,4 @@
 
 - Run the project locally: `yarn start` or `npm run start`.
 
-- Deployed version:
+- Deployed version: https://bixly-test-ts.web.app/

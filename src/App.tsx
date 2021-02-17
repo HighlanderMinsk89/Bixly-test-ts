@@ -1,38 +1,32 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import * as React from 'react'
+import { ChakraProvider, theme, Flex } from '@chakra-ui/react'
+import { useAuth } from './hooks/useAuth'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import { AuthContext } from './context/AuthContext'
+import { useRoutes } from './routes'
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
+export const App = () => {
+  const { login, logout, token } = useAuth()
+  const isAuthenticated = !!token
+  const routes = useRoutes(isAuthenticated)
+
+  return (
+    <Flex justifyContent='center' w='100%'>
+      <ChakraProvider theme={theme}>
+        <AuthContext.Provider value={{ login, logout, isAuthenticated, token }}>
+          <Flex
+            direction='column'
+            alignItems='center'
+            minW='350px'
+            maxW='1000px'
+            w='100%'
           >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+            <Navbar />
+            <Router>{routes}</Router>
+          </Flex>
+        </AuthContext.Provider>
+      </ChakraProvider>
+    </Flex>
+  )
+}
